@@ -42,7 +42,7 @@ date_time = datetime.datetime.now() #current time
 def time_diff (date1,date2): # returns diff in current time (date2) and tweet time (date1) in mins
 	diff = date2 - date1
 	mins = diff.total_seconds() / 60 
-	mins = int(mins)
+    	mins = int(mins) - 60 # due to time difference (my timezone is CEST) and tweety is utc
 	return mins
 
 my_tweets()
@@ -50,15 +50,13 @@ my_tweets()
 def responde_to_tweet(yazi):
 	mentions = api.mentions_timeline() #this returns a tweepy ResultSet class (its objects are iterable like list)
 
-	
+	for mention in reversed(mentions):
 
-	for mention in reversed(mentions):  # because mentions returns in reversed order of tweets in time
-		#print(str(mention.id) + '--' + mention.text)
-			#and (time_diff(mention.created_at,date_time) < 60
-		if yazi in mention.text  : #if it was tweeted in last hour
+        	remiander = time_diff(mention.created_at, date_time)
+
+        	if (yazi in mention.text) and (remiander < 60): # last hours tweets
 			nikname = mention.user.screen_name
 			realName = mention.user.name
-			#print("#hello world is found")
 			remiander= time_diff(mention.created_at,date_time)
 			remiander = str(remiander)
 			print("Responding tw from " + remiander + " minutes ago " + ' from the user : ' + nikname )
@@ -67,12 +65,8 @@ def responde_to_tweet(yazi):
 
 			api.update_status('@' + mention.user.screen_name + " Hello baby.. " ,mention.id)
 		
-			# print("tweetin createdat funku " , type(mention.created_at)) 
 		else :
-			#print("There is no such tweet with " , test , " hashtag in " , x , " minutes" )
-			pass
-#minutee  = int(input("Check how old tweets ? ")) # to extent the code for getting tweets from spec time ago
-#hashtg = input("Hashtag = ? ") # getting specific #hashtags in mentions
+			print("There is no such tweet with " , test , " hashtag in " , x , " minutes" )
 
 def get_other_user(uname):  # get some username as input and get all tweets
 
@@ -82,7 +76,11 @@ def get_other_user(uname):  # get some username as input and get all tweets
 
         if tweex.full_text[0:2] != "RT":
             print("*** " + tweex.full_text)
-
-while True:
+	
+usname = input("Whose tweets you wanna see ? \n")
+get_other_user(usname)
+	
+"""while True:
   responde_to_tweet("test")
 	time.sleep(30)
+"""	
