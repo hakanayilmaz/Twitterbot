@@ -74,6 +74,15 @@ def responde_to_tweet(yazi):
 #minutee  = int(input("Check how old tweets ? ")) # to extent the code for getting tweets from spec time ago
 #hashtg = input("Hashtag = ? ") # getting specific #hashtags in mentions
 
+def get_other_user(uname):  # get some username as input and get all tweets
+
+    list_of_user = api.user_timeline(uname, tweet_mode="extended")
+
+    for tweex in list_of_user:
+
+        if tweex.full_text[0:2] != "RT":
+            print("*** " + tweex.full_text)
+
 while True:
   responde_to_tweet("test")
 	time.sleep(30)
